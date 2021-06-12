@@ -1,16 +1,21 @@
 <!-- 留言板首頁 -->
 <?php
+// 確認沒有設置 SESSION 再啟用 SESSION
+if (!isset($_SESSION)) {
+  session_start();
+}
 require_once("conn.php");
 require_once("utils.php");
 
-// 根據 cookie 得知目前登入狀態
+/**
+ * 從 cookie 裡面讀取 PHPSESSID(token)
+ * 從檔案裏面讀取 session id 內容
+ * 放到 $_SESSION
+ */
 $username = null;
-if (!empty($_COOKIE['token'])) {
-  $user = getUserFromToken($_COOKIE['token']);
-  if ($user) {
-    $username = $user['username'];
-    $nickname = $user['nickname'];
-  }
+if (!empty($_SESSION['username'])) {
+  $username = $_SESSION['username'];
+  $nickname = getUserFromUsername($username)['nickname'];
 }
 ?>
 

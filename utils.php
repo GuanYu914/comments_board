@@ -1,5 +1,9 @@
 <!-- 放一些專案當中從用的 function -->
 <?php
+// 確認沒有設置 SESSION 再啟用 SESSION
+if (!isset($_SESSION)) {
+  session_start();
+}
 require_once("conn.php");
 
 function generateToken()
@@ -11,16 +15,11 @@ function generateToken()
   return $s;
 }
 
-function getUserFromToken($token)
+// 因為使用 SESSION 所以改變 function 用法
+function getUserFromUsername($username)
 {
   // 若要在 function 裡面使用 global 變數，需要加上 global keyword
   global $conn;
-  $sql = sprintf("SELECT username FROM tokens WHERE token='%s'", $token);
-  $res = $conn->query($sql);
-  if (!$res) {
-    die($conn->error);
-  }
-  $username = $res->fetch_assoc()['username'];
   
   $sql = sprintf("SELECT * FROM users WHERE username='%s'", $username);
   $res = $conn->query($sql);

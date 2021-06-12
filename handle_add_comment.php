@@ -1,5 +1,9 @@
 <!-- 主要處理新增留言操作 -->
 <?php
+// 確認沒有設置 SESSION 再啟用 SESSION
+if (!isset($_SESSION)) {
+  session_start();
+}
 require_once("conn.php");
 require_once("utils.php");
 
@@ -10,8 +14,8 @@ if (empty($content)) {
   die();
 }
 
-// 透過 Token 拿到對應的 username，再找到此 username 在 users table 裡所有資訊
-$user = getUserFromToken($_COOKIE['token']);
+// 透過 SESSION 拿到 username 之後，再拿到相對應 user 資訊
+$user = getUserFromUsername($_SESSION['username']);
 
 // 拿到 nickname 跟留言內容之後，新增到 comments table 裡面
 $sql = sprintf("INSERT INTO comments(nickname, content) VALUE('%s', '%s')", $user['nickname'], $content);

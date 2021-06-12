@@ -1,5 +1,9 @@
 <!-- 主要處理 login.php 到後端部分操作 -->
 <?php
+// 確認沒有設置 SESSION 再啟用 SESSION
+if (!isset($_SESSION)) {
+  session_start();
+}
 require_once("conn.php");
 require_once("utils.php");
 
@@ -20,21 +24,15 @@ $res = $conn->query($sql);
 if ($res) {
   // 資料庫裏面有找到資訊
   if ($res->num_rows) {
-    // 回傳登入時相對應的 token，用來代表目前登入的用戶
-    $token = generateToken();
-    // 將 token & username 匹配資訊存放在 tokens table
-    $sql = sprintf("INSERT INTO tokens(token, username) VALUES('%s', '%s')", $token, $username);
-    $res = $conn->query($sql);
-    if (!$res) {
-      die($conn->error);
-    }
-    // 設定 Cookie，並限制期限為一天
-    // 3600 * 24 -> 一天
-    $expire = 3600 * 24;
-    setcookie("token", $token, time() + $expire);
+    /**
+     *  產生 session id (token)
+     *  把 username 寫入檔案
+     *  set-cookie: session-id
+     */
+    $_SESSION['username'] = $username;
     header('Location: index.php');
   } else {
-    // 沒有找到相對應帳密，回傳錯誤代碼
+    // echo $username;
     header('Location: login.php?errCode=2');
   }
 } else {
