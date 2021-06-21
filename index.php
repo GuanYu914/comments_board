@@ -45,7 +45,7 @@ if (!empty($_SESSION['username'])) {
           <a href="login.php">登入</a>
         </div>
       </div>
-    <!-- 拿到 username，輸出 nickname -->
+      <!-- 拿到 username，輸出 nickname -->
     <?php } else { ?>
       <div class="board__user">
         <h2 class="board__user__nickname">歡迎回來～<?php echo $nickname ?></h2>
@@ -86,15 +86,16 @@ if (!empty($_SESSION['username'])) {
         die($conn->error);
       }
       ?>
+      <!-- 將 nickname、content 做 XSS 處理 -->
       <?php while ($row = $res->fetch_assoc()) { ?>
         <div class="card">
           <div class="card__avatar"></div>
           <div class="card__body">
             <div class="card__info">
-              <span class="card__info__author"><?php echo $row['nickname'] ?></span>
+              <span class="card__info__author"><?php echo escape($row['nickname']) ?></span>
               <span class="card__info__time"><?php echo $row['created_at'] ?></span>
             </div>
-            <p class="card__content"><?php echo $row['content'] ?></p>
+            <p class="card__content"><?php echo escape($row['content']) ?></p>
           </div>
         </div>
       <?php } ?>

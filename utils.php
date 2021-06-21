@@ -30,3 +30,8 @@ function getUserFromUsername($username)
   
   return $row;
 }
+
+// 使用內建函式防止 XSS 攻擊
+function escape ($str) {
+  return htmlspecialchars($str, ENT_QUOTES);
+}
