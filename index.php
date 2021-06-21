@@ -79,12 +79,13 @@ if (!empty($_SESSION['username'])) {
     <!-- 根據資料庫拿到相對應留言資訊 -->
     <section>
       <?php
-      $sql = sprintf("SELECT * FROM comments ORDER BY id DESC");
-      $res = $conn->query($sql);
-
+      $sql = "SELECT * FROM comments ORDER BY id DESC";
+      $stmt = $conn->prepare($sql);
+      $res = $stmt->execute();
       if (!$res) {
         die($conn->error);
       }
+      $res = $stmt->get_result();
       ?>
       <!-- 將 nickname、content 做 XSS 處理 -->
       <?php while ($row = $res->fetch_assoc()) { ?>

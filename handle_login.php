@@ -18,11 +18,13 @@ if (empty($username) || empty($password)) {
 }
 
 // 找尋資料庫是否有相同的帳密資訊
-$sql = sprintf("SELECT * FROM users WHERE username='%s'", $username);
-$res = $conn->query($sql);
-
+$sql = "SELECT * FROM users WHERE username=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('s', $username);
+$res = $stmt->execute();
 if ($res) {
   // 資料庫裏面有找到資訊
+  $res = $stmt->get_result();
   if ($res->num_rows) {
     $row = $res->fetch_assoc();
     // 比對用戶輸入的密碼與先前資料庫產生的 hash code 是否符合

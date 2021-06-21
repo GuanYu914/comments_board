@@ -20,8 +20,10 @@ if (empty($nickname) || empty($username) || empty($password)) {
 }
 
 // 新增資訊到 users table
-$sql = sprintf("INSERT INTO users(nickname, username, password) VALUE('%s', '%s', '%s')", $nickname, $username, $password);
-$res = $conn->query($sql);
+$sql = "INSERT INTO users(nickname, username, password) VALUE(?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sss", $nickname, $username, $password);
+$res = $stmt->execute();
 
 // 成功返回 index.php
 if ($res) {

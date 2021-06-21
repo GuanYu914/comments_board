@@ -18,8 +18,10 @@ if (empty($content)) {
 $user = getUserFromUsername($_SESSION['username']);
 
 // 拿到 nickname 跟留言內容之後，新增到 comments table 裡面
-$sql = sprintf("INSERT INTO comments(nickname, content) VALUE('%s', '%s')", $user['nickname'], $content);
-$res = $conn->query($sql);
+$sql = "INSERT INTO comments(nickname, content) VALUE(?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $user['nickname'], $content);
+$res = $stmt->execute();
 if (!$res) {
   die($conn->error);
 }

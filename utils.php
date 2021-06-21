@@ -21,11 +21,15 @@ function getUserFromUsername($username)
   // 若要在 function 裡面使用 global 變數，需要加上 global keyword
   global $conn;
   
-  $sql = sprintf("SELECT * FROM users WHERE username='%s'", $username);
-  $res = $conn->query($sql);
+  // $sql = sprintf("SELECT * FROM users WHERE username='%s'", $username);
+  $sql = "SELECT * FROM users WHERE username=?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param('s', $username);
+  $res = $stmt->execute();
   if (!$res) {
     die($conn->error);
   }
+  $res = $stmt->get_result();
   $row = $res->fetch_assoc();
   
   return $row;
