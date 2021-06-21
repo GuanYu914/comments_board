@@ -1,5 +1,9 @@
 <!-- 主要處理 register.php 到後端部分操作 -->
 <?php
+// 確認沒有設置 SESSION 再啟用 SESSION
+if (!isset($_SESSION)) {
+  session_start();
+}
 require_once("conn.php");
 
 // 拿到用戶輸入的註冊資訊
@@ -21,7 +25,9 @@ $res = $conn->query($sql);
 
 // 成功返回 index.php
 if ($res) {
+  $_SESSION['username'] = $username;
   header('Location: index.php');
+  die();
 } else {
   // 若 username 重複，回傳錯誤代碼
   if ($conn->errno === 1062) {
