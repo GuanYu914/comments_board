@@ -18,22 +18,32 @@ if (empty($username) || empty($password)) {
 }
 
 // 找尋資料庫是否有相同的帳密資訊
-$sql = sprintf("SELECT * FROM users WHERE username='%s' and password='%s'", $username, $password);
+$sql = sprintf("SELECT * FROM users WHERE username='%s'", $username);
 $res = $conn->query($sql);
 
 if ($res) {
   // 資料庫裏面有找到資訊
   if ($res->num_rows) {
-    /**
-     *  產生 session id (token)
-     *  把 username 寫入檔案
-     *  set-cookie: session-id
-     */
-    $_SESSION['username'] = $username;
-    header('Location: index.php');
+    $row = $res->fetch_assoc();
+    // 比對用戶輸入的密碼與先前資料庫產生的 hash code 是否符合
+    if (password_verify($password, $row['password'])) {
+      /**
+       *  產生 session id (token)
+       *  把 username 寫入檔案
+       *  set-cookie: session-id
+       */
+      $_SESSION['username'] = $username;
+      header('Location: index.php');
+      die();
+    } else {
+      // 用戶名稱的密碼不相符
+      header('Location: login.php?errCode=2');
+      die();
+    }
   } else {
-    // echo $username;
+    // 找不到用戶名稱
     header('Location: login.php?errCode=2');
+    die();
   }
 } else {
   die('code' . $conn->errno);

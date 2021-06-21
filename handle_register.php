@@ -5,7 +5,9 @@ require_once("conn.php");
 // 拿到用戶輸入的註冊資訊
 $nickname = $_POST['nickname'];
 $username = $_POST['username'];
-$password = $_POST['password'];
+
+// 產生 password 的 hash code
+$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
 // 若有欄位為空值，回傳錯誤代碼
 if (empty($nickname) || empty($username) || empty($password)) {
