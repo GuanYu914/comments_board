@@ -48,7 +48,7 @@ if (!empty($_SESSION['username'])) {
       <!-- 拿到 username，輸出 nickname -->
     <?php } else { ?>
       <div class="board__user">
-        <h2 class="board__user__nickname">歡迎回來～<?php echo $nickname ?></h2>
+        <h2 class="board__user__nickname">歡迎回來～<?php echo escape($nickname) ?></h2>
         <div class="board__user__btn">
           <a href="logout.php">登出</a>
         </div>
@@ -94,7 +94,7 @@ if (!empty($_SESSION['username'])) {
           <div class="card__body">
             <div class="card__info">
               <span class="card__info__author"><?php echo escape($row['nickname']) ?></span>
-              <span class="card__info__time"><?php echo $row['created_at'] ?></span>
+              <span class="card__info__time"><?php echo escape($row['created_at']) ?></span>
             </div>
             <p class="card__content"><?php echo escape($row['content']) ?></p>
           </div>
