@@ -50,9 +50,14 @@ if (!empty($_SESSION['username'])) {
       <div class="board__user">
         <h2 class="board__user__nickname">歡迎回來～<?php echo escape($nickname) ?></h2>
         <div class="board__user__btn">
+          <a class="board__user__btn__edit_nickname">編輯暱稱</a>
           <a href="logout.php">登出</a>
         </div>
       </div>
+      <form class="hidden board__nickname__form" action="handle_update_user.php" method="POST">
+        修改暱稱：<input type="text" name="nickname" placeholder="輸入您的新暱稱">
+        <input class="board__submit-btn" type="submit" value="送出">
+      </form>
     <?php } ?>
     <!-- 根據 queryString errCode 印出相對應的錯誤訊息 -->
     <?php
@@ -79,7 +84,13 @@ if (!empty($_SESSION['username'])) {
     <!-- 根據資料庫拿到相對應留言資訊 -->
     <section>
       <?php
-      $sql = "SELECT * FROM comments ORDER BY id DESC";
+      // 為了使修改過後的 nickname 能夠同步到之前的留言
+      // 根據 comments 的 username 找出 users 的 nickname
+      $sql = 
+      "SELECT C.id as comment_id, C.created_at as created_at, U.nickname as nickname, U.username as username, C.content as content " .
+      "FROM comments as C LEFT JOIN users as U " .
+      "ON C.username = U.username ".
+      "ORDER BY C.created_at DESC";
       $stmt = $conn->prepare($sql);
       $res = $stmt->execute();
       if (!$res) {
@@ -93,8 +104,12 @@ if (!empty($_SESSION['username'])) {
           <div class="card__avatar"></div>
           <div class="card__body">
             <div class="card__info">
-              <span class="card__info__author"><?php echo escape($row['nickname']) ?></span>
+              <span class="card__info__author"><?php echo escape($row['nickname']) ?>
+              (@<?php echo escape($row['username'])?>)</span>
               <span class="card__info__time"><?php echo escape($row['created_at']) ?></span>
+              <?php if ($row["username"] === $username) {?>
+              <a class="card__info__edit" href="update_comment.php?id=<?php echo escape($row['comment_id']) ?>">編輯留言</a>
+              <?php }?>
             </div>
             <p class="card__content"><?php echo escape($row['content']) ?></p>
           </div>
@@ -102,6 +117,7 @@ if (!empty($_SESSION['username'])) {
       <?php } ?>
     </section>
   </main>
+<script src="index.js"></script>
 </body>
 
 </html>

@@ -18,6 +18,11 @@ body {
   color: #a20606;
 }
 
+.hidden {
+  /* 將元件隱藏，且不佔用任何空間 */
+  display: none;
+}
+
 .board {
   margin: 20px auto;
   width: 100%;
@@ -51,6 +56,7 @@ body {
   border-radius: 6px;
   color: #583c63;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .board__form textarea {
@@ -75,6 +81,21 @@ body {
 .board__submit-btn:hover {
   background-color: #c2dffb;
   color: white;
+}
+
+.board__nickname__form {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.board__nickname__form input {
+  padding: 8px;
+}
+
+.board__nickname__form > input[type="submit"] {
+  margin-left: 8px;
+  margin-top: 0px;
 }
 
 .board__hr {
@@ -119,6 +140,13 @@ body {
 .card__info__time {
   display: inline-block;
   color: #a0a0a0;
+}
+
+.card__info__edit {
+  text-decoration: none;
+  color: #5c9edc;
+  font-weight: bold;
+  margin-left: 10px;
 }
 
 .board__login:first-child {

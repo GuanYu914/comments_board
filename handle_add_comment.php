@@ -14,13 +14,11 @@ if (empty($content)) {
   die();
 }
 
-// 透過 SESSION 拿到 username 之後，再拿到相對應 user 資訊
-$user = getUserFromUsername($_SESSION['username']);
-
-// 拿到 nickname 跟留言內容之後，新增到 comments table 裡面
-$sql = "INSERT INTO comments(nickname, content) VALUE(?, ?)";
+// 使用 username 關聯 users 裡面的 nickname 欄位資訊，方便以後修改暱稱後可以同步更新
+// 拿到 username 跟留言內容之後，新增到 comments table 裡面
+$sql = "INSERT INTO comments(username, content) VALUE(?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $user['nickname'], $content);
+$stmt->bind_param("ss", $_SESSION['username'], $content);
 $res = $stmt->execute();
 if (!$res) {
   die($conn->error);
