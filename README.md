@@ -15,5 +15,6 @@
 
 ## 資安實作
 - PHP SESSION 機制
+- HASH password 儲存機制
 - XSS 預防
 - SQL Injection 預防
