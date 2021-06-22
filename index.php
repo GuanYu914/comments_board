@@ -90,6 +90,7 @@ if (!empty($_SESSION['username'])) {
       "SELECT C.id as comment_id, C.created_at as created_at, U.nickname as nickname, U.username as username, C.content as content " .
       "FROM comments as C LEFT JOIN users as U " .
       "ON C.username = U.username ".
+      "WHERE C.is_deleted is NULL ".
       "ORDER BY C.created_at DESC";
       $stmt = $conn->prepare($sql);
       $res = $stmt->execute();
@@ -109,6 +110,7 @@ if (!empty($_SESSION['username'])) {
               <span class="card__info__time"><?php echo escape($row['created_at']) ?></span>
               <?php if ($row["username"] === $username) {?>
               <a class="card__info__edit" href="update_comment.php?id=<?php echo escape($row['comment_id']) ?>">編輯留言</a>
+              <a class="card__info__edit" href="handle_delete_comment.php?id=<?php echo escape($row['comment_id']) ?>">刪除留言</a>
               <?php }?>
             </div>
             <p class="card__content"><?php echo escape($row['content']) ?></p>
