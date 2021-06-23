@@ -4,8 +4,17 @@
 - 會員登出
 - 會員註冊
 - 新增留言
+- 編輯暱稱
+- 編輯留言
+- 刪除留言
+- 分頁瀏覽
 
-## 使用那些技術
+## 實作環境
+- MariaDB based on XAMPP
+- XAMPP Server
+
+## 資安實作
 - PHP SESSION 機制
-- 資料庫串接
-- XAMPP 設置
+- HASH password 儲存機制
+- XSS 預防
+- SQL Injection 預防
