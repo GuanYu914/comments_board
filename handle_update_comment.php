@@ -9,6 +9,7 @@ require_once("conn.php");
 // 拿到用戶輸入新的暱稱
 $id = $_POST['id'];
 $content =$_POST['content'];
+$username = $_SESSION['username'];
 
 // 若有欄位為空值，回傳錯誤代碼
 if (empty($content)) {
@@ -17,9 +18,9 @@ if (empty($content)) {
 }
 
 // 根據 id 找到要更新的留言內容
-$sql = "UPDATE comments SET content=? WHERE id=?";
+$sql = "UPDATE comments SET content=? WHERE id=? AND username=?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("si", $content, $id);
+$stmt->bind_param("sis", $content, $id, $username);
 $res = $stmt->execute();
 
 // 成功返回 index.php

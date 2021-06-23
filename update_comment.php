@@ -1,13 +1,19 @@
 <!-- 編輯既有留言頁面 -->
 <?php
+// 確認沒有設置 SESSION 再啟用 SESSION
+if (!isset($_SESSION)) {
+  session_start();
+}
+
 require_once("conn.php");
 require_once("utils.php");
 
 // 拿到留言的 id
 $id = $_GET['id'];
-$sql = "SELECT * FROM comments WHERE id=?";
+$username = $_SESSION['username'];
+$sql = "SELECT * FROM comments WHERE id=? AND username=?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("is", $id, $username);
 $res = $stmt->execute();
 
 if (!$res) {
@@ -48,7 +54,11 @@ $row = $res->fetch_assoc();
     ?>
 
     <form class="board__form" method="POST" action="handle_update_comment.php">
-      <textarea name="content" rows="5"><?php echo $row['content']?></textarea>
+      <?php if (!empty($row)) {?>
+        <textarea name="content" rows="5"><?php echo $row['content']?></textarea>
+      <?php } else {?>
+        <textarea name="content" rows="5" readonly>不能編輯他人的留言</textarea>
+      <?php }?>
       <input type="hidden" name="id" value="<?php echo $id?>">
       <input class="board__submit-btn" type="submit" value="送出">
     </form>

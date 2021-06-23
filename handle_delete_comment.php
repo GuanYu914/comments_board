@@ -8,7 +8,7 @@ require_once("conn.php");
 
 // 拿到用戶輸入新的暱稱
 $id = $_GET['id'];
-// $content =$_POST['content'];
+$username = $_SESSION['username'];
 
 // 若有欄位為空值，回傳錯誤代碼
 if (empty($id)) {
@@ -19,9 +19,9 @@ if (empty($id)) {
 // 根據 id 找到要刪除的留言內容
 // $sql = "UPDATE comments SET content=? WHERE id=?";
 // $sql = "DELETE FROM comments WHERE id=?";
-$sql = "UPDATE comments SET is_deleted=1 WHERE id=?";
+$sql = "UPDATE comments SET is_deleted=1 WHERE id=? AND username=?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("is", $id, $username);
 $res = $stmt->execute();
 
 // 成功返回 index.php
